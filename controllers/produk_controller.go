@@ -3,11 +3,12 @@ package controllers
 import (
 	"fmt"
 	"net/http"
-	"rakamin-project/models"
-	"rakamin-project/services"
+	"os"
+	"path/filepath"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"strings"
+	"rakamin-project/models"
+	"rakamin-project/services"
 	"strconv"
 )
 
@@ -33,54 +34,68 @@ func (pc *ProdukController) CreateProduk(c *fiber.Ctx) error {
 	return c.Status(http.StatusCreated).JSON(produk)
 }
 
-// Upload Foto Produk handler
-// Upload Foto Produk handler
+// Upload Foto Produk
 func (pc *ProdukController) UploadFotoProduk(c *fiber.Ctx) error {
+	// Ambil ID Produk dari parameter
 	produkID := c.Params("id")
 
-	produkIDUint, err := strconv.Atoi(produkID)
+	// Konversi ID Produk ke uint
+	produkIDUint, err := strconv.ParseUint(produkID, 10, 32)
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid product ID"})
 	}
 
+	// Ambil file dari form-data
 	file, err := c.FormFile("foto")
 	if err != nil {
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Failed to get file"})
 	}
 
-	extension := file.Filename[strings.LastIndex(file.Filename, "."):]
+	// Buat direktori uploads jika belum ada
+	uploadDir := "./uploads"
+	if _, err := os.Stat(uploadDir); os.IsNotExist(err) {
+		if err := os.Mkdir(uploadDir, os.ModePerm); err != nil {
+			return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to create upload directory"})
+		}
+	}
+
+	// Generate nama file unik
+	extension := filepath.Ext(file.Filename)
 	filename := fmt.Sprintf("%s%s", uuid.New().String(), extension)
+	filepath := fmt.Sprintf("%s/%s", uploadDir, filename)
 
-	// Directory for uploads (make sure the folder exists)
-	filepath := fmt.Sprintf("./uploads/%s", filename)
-
-	// Save file to disk
+	// Simpan file ke server
 	if err := c.SaveFile(file, filepath); err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to save file"})
 	}
 
-	// Build URL for the uploaded file
-	// Adjust the base URL depending on your setup (this is for example purposes)
-	fileURL := fmt.Sprintf("http://localhost:3000/uploads/%s", filename)
-
-	// Save the photo to the database
+	// Simpan informasi foto produk ke database
 	fotoProduk := models.FotoProduk{
 		IDProduk: uint(produkIDUint),
-		Url:      fileURL,
+		Url:      fmt.Sprintf("http://localhost:8080/uploads/%s", filename),
 	}
 
+	// Simpan foto produk ke database
 	if err := pc.ProdukService.SaveFotoProduk(fotoProduk); err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to save foto produk"})
 	}
 
-	return c.Status(http.StatusOK).JSON(fiber.Map{"message": "File uploaded successfully"})
+	// Update produk dengan URL foto yang baru
+	produk, err := pc.ProdukService.GetProdukByID(uint(produkIDUint))
+	if err != nil {
+		return c.Status(http.StatusNotFound).JSON(fiber.Map{"error": "Product not found"})
+	}
+
+	// Menambahkan foto ke produk
+	produk.FotoProduk = append(produk.FotoProduk, fotoProduk)
+
+	return c.Status(http.StatusOK).JSON(fiber.Map{"message": "File uploaded successfully", "foto_url": fotoProduk.Url, "produk": produk})
 }
 
 // GetAllProduk handler
-// GetAllProduk handler with pagination
 func (pc *ProdukController) GetAllProduk(c *fiber.Ctx) error {
-	pageStr := c.Query("page", "1")      // default to page 1
-	limitStr := c.Query("limit", "10")   // default to 10 items per page
+	pageStr := c.Query("page", "1")    // default to page 1
+	limitStr := c.Query("limit", "10") // default to 10 items per page
 	page, _ := strconv.Atoi(pageStr)
 	limit, _ := strconv.Atoi(limitStr)
 
@@ -132,6 +147,51 @@ func (pc *ProdukController) UpdateProduk(c *fiber.Ctx) error {
 	return c.JSON(produk)
 }
 
+// Update Foto Produk (PUT)
+func (pc *ProdukController) UpdateFotoProduk(c *fiber.Ctx) error {
+	// Ambil ID produk dari parameter
+	produkID := c.Params("id")
+
+	// Konversi ID ke uint
+	produkIDUint, err := strconv.ParseUint(produkID, 10, 32)
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid product ID"})
+	}
+
+	// Ambil file dari form-data
+	file, err := c.FormFile("foto")
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Failed to get file"})
+	}
+
+	// Pastikan direktori uploads ada
+	uploadDir := "./uploads"
+	if _, err := os.Stat(uploadDir); os.IsNotExist(err) {
+		os.Mkdir(uploadDir, os.ModePerm)
+	}
+
+	// Generate nama file unik
+	extension := filepath.Ext(file.Filename)
+	filename := fmt.Sprintf("%s%s", uuid.New().String(), extension)
+	filepath := fmt.Sprintf("%s/%s", uploadDir, filename)
+
+	// Simpan file ke server
+	if err := c.SaveFile(file, filepath); err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to save file"})
+	}
+
+	// URL yang akan disimpan
+	fotoUrl := fmt.Sprintf("http://localhost:8080/uploads/%s", filename)
+
+	// Update foto produk di database
+	err = pc.ProdukService.UpdateFotoProduk(uint(produkIDUint), fotoUrl)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.Status(http.StatusOK).JSON(fiber.Map{"message": "Foto produk berhasil diperbarui", "foto_url": fotoUrl})
+}
+
 // DeleteProduk handler
 func (pc *ProdukController) DeleteProduk(c *fiber.Ctx) error {
 	produkID := c.Params("id")
@@ -148,4 +208,24 @@ func (pc *ProdukController) DeleteProduk(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{"message": "Product deleted successfully"})
+}
+
+// Delete Foto Produk (DELETE)
+func (pc *ProdukController) DeleteFotoProduk(c *fiber.Ctx) error {
+	// Ambil ID produk dari parameter
+	produkID := c.Params("id")
+
+	// Konversi ID ke uint
+	produkIDUint, err := strconv.ParseUint(produkID, 10, 32)
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid product ID"})
+	}
+
+	// Panggil service untuk menghapus foto produk
+	err = pc.ProdukService.DeleteFotoProduk(uint(produkIDUint))
+	if err != nil {
+		return c.Status(http.StatusNotFound).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.Status(http.StatusOK).JSON(fiber.Map{"message": "Foto produk berhasil dihapus"})
 }

@@ -1,0 +1,771 @@
+{
+	"info": {
+		"_postman_id": "b7f30526-df59-4f1a-a039-bd7c8b02c747",
+		"name": "Rakamin Evermos Virtual Internship",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36464632"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nama\": \"Budi Santoso\",\n  \"kata_sandi\": \"password123\",\n  \"no_telp\": \"081234567891\",\n  \"tanggal_lahir\": \"1995-06-15\",\n  \"jenis_kelamin\": \"Laki-laki\",\n  \"email\": \"budi@example.com\",\n  \"id_kota\": \"3171\",\n  \"id_provinsi\": \"31\"\n}"
+						},
+						"url": {
+							"raw": "{{local}}/users/register",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"budi@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{local}}/users/login",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						]
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/users",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Kategori (Admin Only)",
+			"item": [
+				{
+					"name": "Create Kategori",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"nama_kategori\": \"Makanan Berat\" }"
+						},
+						"url": {
+							"raw": "{{local}}/kategori",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"kategori"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Kategori",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/kategori",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"kategori"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Kategori",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/kategori/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"kategori",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Kategori",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/kategori/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"kategori",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Produk",
+			"item": [
+				{
+					"name": "Create Produk",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nama_produk\": \"Nasi Goreng\",\n  \"slug\": \"nasi-goreng\",\n  \"harga_reseller\": 20000,\n  \"harga_konsumen\": 25000,\n  \"stok\": 50,\n  \"deskripsi\": \"Nasi goreng spesial dengan telur\",\n  \"id_toko\": 1,\n  \"id_category\": 1\n}"
+						},
+						"url": {
+							"raw": "{{local}}/produk",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"produk"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Produk By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/produk/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"produk",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Produk",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/produk",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"produk"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Produk",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/produk/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"produk",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Produk",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/produk/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"produk",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Foto Produk (Upload File)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/produk/1/upload-foto",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"produk",
+								"1",
+								"upload-foto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Foto Produk",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/produk/1/update-foto",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"produk",
+								"1",
+								"update-foto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Foto Produk",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/1/delete-foto",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"1",
+								"delete-foto"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Alamat",
+			"item": [
+				{
+					"name": "Create Alamat",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"judul_alamat\": \"Rumah\", \"nama_penerima\": \"Budi\", \"no_telp\": \"081234567891\", \"detail_alamat\": \"Jl. Merdeka No. 1, Jakarta\" }"
+						},
+						"url": {
+							"raw": "{{local}}/alamat",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"alamat"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Alamat",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/alamat",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"alamat"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Alamat By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/alamat/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"alamat",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Alamat",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/alamat/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"alamat",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Alamat",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/alamat/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"alamat",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transaksi",
+			"item": [
+				{
+					"name": "Create Transaksi",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_user\": 3,\n  \"alamat_pengirim\": \"Bandung Jawa Barat\",\n  \"harga_total\": 150000,\n  \"kode_invoice\": \"INV-20250201-001\",\n  \"method_bayar\": \"transfer\"\n}"
+						},
+						"url": {
+							"raw": "{{local}}/transaksi",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"transaksi"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Log Produk",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id_produk\": 1,\n  \"nama_produk\": \"Nasi Goreng\",\n  \"slug\": \"nasi-goreng\",\n  \"harga_reseller\": 20000,\n  \"harga_konsumen\": 25000,\n  \"deskripsi\": \"Nasi goreng spesial dengan telur\",\n  \"id_toko\": 1,\n  \"id_category\": 1\n}"
+						},
+						"url": {
+							"raw": "{{local}}/transaksi/log-produk",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"transaksi",
+								"log-produk"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transaksi By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/transaksi/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"transaksi",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Detail Transaksi",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/transaksi/detail",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"transaksi",
+								"detail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Transaksi",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/transaksi/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"transaksi",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Transaksi",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/transaksi/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"transaksi",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Log Produk",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/transaksi/log-produk/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"transaksi",
+								"log-produk",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Log Produk",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/transaksi/log-produk/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"transaksi",
+								"log-produk",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Toko",
+			"item": [
+				{
+					"name": "Get Toko",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Update Toko",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{local}}/toko",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"toko"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

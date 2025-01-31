@@ -134,3 +134,47 @@ func (tc *TransaksiController) CreateLogProduk(c *fiber.Ctx) error {
 	// Return response
 	return c.Status(http.StatusCreated).JSON(fiber.Map{"message": "Product log created successfully", "data": log})
 }
+
+// Update Log Produk
+func (tc *TransaksiController) UpdateLogProduk(c *fiber.Ctx) error {
+	logID := c.Params("id") // Ambil ID log produk dari parameter
+
+	// Konversi ID ke uint
+	logIDUint, err := strconv.ParseUint(logID, 10, 32)
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid log ID"})
+	}
+
+	// Ambil data input dari request body
+	var updatedLog models.LogProduk
+	if err := c.BodyParser(&updatedLog); err != nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid input"})
+	}
+
+	// Panggil service untuk update log produk
+	logProduk, err := tc.TransaksiService.UpdateLogProduk(uint(logIDUint), updatedLog)
+	if err != nil {
+		return c.Status(http.StatusNotFound).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.JSON(fiber.Map{"message": "Log produk berhasil diperbarui", "data": logProduk})
+}
+
+// Delete Log Produk
+func (tc *TransaksiController) DeleteLogProduk(c *fiber.Ctx) error {
+	logID := c.Params("id") // Ambil ID log produk dari parameter
+
+	// Konversi ID ke uint
+	logIDUint, err := strconv.ParseUint(logID, 10, 32)
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid log ID"})
+	}
+
+	// Panggil service untuk delete log produk
+	err = tc.TransaksiService.DeleteLogProduk(uint(logIDUint))
+	if err != nil {
+		return c.Status(http.StatusNotFound).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.JSON(fiber.Map{"message": "Log produk berhasil dihapus"})
+}

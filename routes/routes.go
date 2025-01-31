@@ -61,6 +61,12 @@ func SetupRoutes(app *fiber.App, db *gorm.DB) {
 	produkRoutes.Put("/:id", middlewares.AuthMiddleware, produkController.UpdateProduk)
 	produkRoutes.Delete("/:id", middlewares.AuthMiddleware, produkController.DeleteProduk)
 
+	// Rute untuk foto produk
+	produkRoutes.Post("/:id/upload-foto", middlewares.AuthMiddleware, produkController.UploadFotoProduk)
+	produkRoutes.Put("/:id/update-foto", middlewares.AuthMiddleware, produkController.UpdateFotoProduk)
+	produkRoutes.Delete("/:id/delete-foto", middlewares.AuthMiddleware, produkController.DeleteFotoProduk)
+
+
 	// Rute untuk alamat
 	alamatRoutes := app.Group("/alamat")
 	alamatRoutes.Post("/", middlewares.AuthMiddleware, alamatController.CreateAlamat)
@@ -77,4 +83,6 @@ func SetupRoutes(app *fiber.App, db *gorm.DB) {
 	transaksiRoutes.Delete("/:id", middlewares.AuthMiddleware, transaksiController.DeleteTransaksi)
 	transaksiRoutes.Post("/detail", middlewares.AuthMiddleware, transaksiController.SaveDetailTransaksi)
 	transaksiRoutes.Post("/log-produk", middlewares.AuthMiddleware, transaksiController.CreateLogProduk)
+	transaksiRoutes.Put("/log-produk/:id", middlewares.AuthMiddleware, transaksiController.UpdateLogProduk)
+	transaksiRoutes.Delete("/log-produk/:id", middlewares.AuthMiddleware, transaksiController.DeleteLogProduk)
 }

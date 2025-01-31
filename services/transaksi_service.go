@@ -52,6 +52,40 @@ func (ts *TransaksiService) CreateLogProduk(logProduk models.LogProduk) (*models
 	return &logProduk, nil
 }
 
+// Update Log Produk
+func (ts *TransaksiService) UpdateLogProduk(logID uint, updatedLog models.LogProduk) (*models.LogProduk, error) {
+	var logProduk models.LogProduk
+
+	// Cek apakah log produk dengan ID tersebut ada
+	if err := ts.DB.First(&logProduk, logID).Error; err != nil {
+		return nil, errors.New("log produk tidak ditemukan")
+	}
+
+	// Update data log produk
+	if err := ts.DB.Model(&logProduk).Updates(updatedLog).Error; err != nil {
+		return nil, err
+	}
+
+	return &logProduk, nil
+}
+
+// Delete Log Produk
+func (ts *TransaksiService) DeleteLogProduk(logID uint) error {
+	var logProduk models.LogProduk
+
+	// Cek apakah log produk dengan ID tersebut ada
+	if err := ts.DB.First(&logProduk, logID).Error; err != nil {
+		return errors.New("log produk tidak ditemukan")
+	}
+
+	// Hapus log produk dari database
+	if err := ts.DB.Delete(&logProduk).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // CreateTransaksi untuk membuat transaksi baru
 func (ts *TransaksiService) CreateTransaksi(transaksi models.Transaksi) (*models.Transaksi, error) {
 	// Validasi user dan alamat pengirim
